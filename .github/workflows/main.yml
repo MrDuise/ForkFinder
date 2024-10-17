@@ -1,0 +1,38 @@
+name: Test and Build
+
+on:
+  push:   # Runs the workflow on any push to any branch
+  pull_request:  # Runs the workflow on any pull request to any branch
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]  # Test on multiple Node.js versions
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  # Checks out your repository's code
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}  # Uses the Node.js versions in the matrix
+
+      - name: Install dependencies
+        run: npm install  # Installs your project's dependencies
+
+      - name: Run Tests
+        run: npm test  # Runs your tests with Jest (make sure `npm test` is configured)
+
+      - name: Check Build
+        run: npm run build  # Optionally, runs the build (if you have a build step in your project)
+
+      - name: Upload coverage report (optional)
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/  # Assuming Jest outputs coverage reports to the `coverage/` folder
