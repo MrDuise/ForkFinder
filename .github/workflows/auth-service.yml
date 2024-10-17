@@ -1,0 +1,33 @@
+name: Auth Service CI
+
+on:
+  push:
+    paths:
+      - 'auth-service/**'  # Trigger workflow only if files in auth-service folder change
+  pull_request:
+    paths:
+      - 'auth-service/**'  # Trigger workflow on pull requests for auth-service changes
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Adjust Node.js version as needed for auth-service
+
+      - name: Install dependencies
+        run: |
+          cd auth-service
+          npm install  # Installs dependencies for auth-service
+
+      - name: Run Tests
+        run: |
+          cd auth-service
+          npm test  # Runs tests for auth-service
