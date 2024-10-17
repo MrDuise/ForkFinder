@@ -1,6 +1,7 @@
 name: Test and Build
 
 on:
+  workflow_dispatch:
   push:   # Runs the workflow on any push to any branch
   pull_request:  # Runs the workflow on any pull request to any branch
 
