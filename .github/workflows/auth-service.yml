@@ -20,14 +20,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Adjust Node.js version as needed for auth-service
+          node-version: '20'  # Adjust Node.js version as needed for auth-service
 
       - name: Install dependencies
         run: |
-          cd auth-service
+          cd ./auth-service
           npm install  # Installs dependencies for auth-service
 
       - name: Run Tests
         run: |
-          cd auth-service
+          cd ./auth-service
           npm test  # Runs tests for auth-service
