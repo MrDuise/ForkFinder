@@ -25,7 +25,7 @@ export class AuthController {
   }
 
   @Post('login')
-  @HttpCode(200) 
+  @HttpCode(200)
   async login(
     @Body('email') email: string,
     @Body('password') password: string,
