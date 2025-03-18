@@ -1,0 +1,16 @@
+@startuml
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(iau, "Indivdual App User", "A user of the app.")
+System(ffs, "Restraunt Finder System", "Allows users to form groups/sessions to find a common restraunt to eat at.")
+System_Ext(es, "E-mail system", "The e-mail system.")
+System_Ext(rds, "Restraunt Data System", "The external system for getting restraunt data.")
+
+
+Rel(iau, ffs, "Uses")
+Rel(es, iau, "Sends e-mails to")
+Rel(ffs, es, "Sends e-mails", "SMTP")
+Rel(ffs, rds, "Uses")
+@enduml
