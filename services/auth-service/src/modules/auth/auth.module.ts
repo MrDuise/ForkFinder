@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
+import { UserService } from './services/user.service';
+import { AuthService } from './services/auth.service';
+import { AuthController } from './controllers/auth.controller';
 import { User } from './entities/user.entity';
 
 console.log('JWT_SECRET:', process.env.JWT_SECRET);
@@ -20,7 +21,7 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET);
       }),
     }),
   ],
-  providers: [AuthService],
+  providers: [AuthService, UserService],
   controllers: [AuthController],
 })
 export class AuthModule {}
