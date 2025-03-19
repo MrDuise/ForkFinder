@@ -1,9 +1,14 @@
-import { IsString, IsOptional, IsEmail, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsEmail,
+  IsNotEmpty,
+  MinLength,
+} from 'class-validator';
 
-export class CreateUserDto {
+export class RegisterUserDto {
   @IsNotEmpty()
-  @IsString()
-  id: number;
+  id: string;
 
   @IsNotEmpty()
   @IsString()
@@ -25,10 +30,7 @@ export class CreateUserDto {
   @IsString()
   defaultLocation: string;
 
-  @IsOptional()
-  createdAt?: Date;
-
-  @IsOptional()
-  updatedAt?: Date;
+  @IsString()
+  @MinLength(8)
+  password: string; // ✅ Only used for input, never returned in responses
 }
-
