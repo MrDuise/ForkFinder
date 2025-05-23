@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
+import { GlobalExceptionFilter } from './common/middleware/http-exception.middleware';
 
 // Load environment variables
 dotenv.config();
@@ -10,7 +11,11 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
   try {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, {
+      logger: ['log', 'error', 'warn', 'debug', 'verbose'], // Enables all levels
+    });
+
+    app.useGlobalFilters(new GlobalExceptionFilter());
 
     // Global pipes for validation
     app.useGlobalPipes(

@@ -20,9 +20,6 @@ export class User {
   @Column({ nullable: true })
   phoneNumber: string;
 
-  @Column({ nullable: true })
-  defaultLocation: string;
-
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 

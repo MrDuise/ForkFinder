@@ -6,6 +6,8 @@ import { UserService } from './services/user.service';
 import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { User } from './entities/user.entity';
+import { UserController } from './controllers/user.controller';
+import { UserPreferences } from './entities/profile.entity';
 
 console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
@@ -20,8 +22,9 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET);
         signOptions: { expiresIn: '1h' },
       }),
     }),
+    TypeOrmModule.forFeature([UserPreferences]),
   ],
   providers: [AuthService, UserService],
-  controllers: [AuthController],
+  controllers: [AuthController, UserController],
 })
 export class AuthModule {}

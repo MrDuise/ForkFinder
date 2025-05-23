@@ -1,6 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { User } from '../modules/auth/entities/user.entity';
+import { UserPreferences } from '../modules/auth/entities/profile.entity';
 
 export const databaseConfig = registerAs(
   'database',
@@ -11,7 +12,7 @@ export const databaseConfig = registerAs(
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres123',
     database: process.env.DB_NAME || 'ForkFinder',
-    entities: [User],
+    entities: [User, UserPreferences],
     synchronize: process.env.NODE_ENV !== 'production',
     logging: process.env.NODE_ENV === 'development',
     ssl:
