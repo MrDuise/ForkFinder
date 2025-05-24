@@ -13,8 +13,11 @@ export class SessionService {
     private readonly redisService: RedisService,
   ) {}
 
-  async createSession(createSessionDto: CreateSessionDto): Promise<Session> {
-    const { creatorId, location, settings } = createSessionDto;
+  async createSession(
+    createrID: string,
+    createSessionDto: CreateSessionDto,
+  ): Promise<Session> {
+    const { location, settings } = createSessionDto;
 
     // Step 1: Generate a unique session ID
     const sessionId = uuidv4();
@@ -31,8 +34,8 @@ export class SessionService {
     // Step 5: Create and save the session in MongoDB
     const session = new this.sessionModel({
       _id: sessionId, // Store the session ID in MongoDB as well
-      creatorId,
-      participants: [creatorId], // Creator is automatically added
+      createrID,
+      participants: [createrID], // Creator is automatically added
       votes: [],
       location,
       settings,

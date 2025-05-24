@@ -26,7 +26,6 @@ export class UserController {
     @Req() req: Request,
   ) {
     const userId = req.user?.userId;
-    console.log('this is the userID: ' + userId);
 
     if (!userId) {
       throw new Error('User ID not found in request'); // or throw HttpException

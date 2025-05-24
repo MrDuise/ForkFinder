@@ -6,18 +6,28 @@ import {
   Body,
   Delete,
   Put,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { SessionService } from './services/session.service';
 import { Session } from './schemas/session.schema';
 import { CreateSessionDto } from './dto/create-session-dto';
+import { AuthGuard } from '../auth/jwt-auth.guard';
+import { Request } from 'express';
 
+@UseGuards(AuthGuard)
 @Controller('sessions')
 export class SessionController {
   constructor(private readonly sessionService: SessionService) {}
 
   @Post()
-  async createSession(@Body() data: CreateSessionDto) {
-    return this.sessionService.createSession(data);
+  async createSession(@Body() data: CreateSessionDto, @Req() req: Request) {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      throw new Error('User ID not found in request'); // or throw HttpException
+    }
+    return this.sessionService.createSession(userId, data);
   }
 
   @Get(':id')

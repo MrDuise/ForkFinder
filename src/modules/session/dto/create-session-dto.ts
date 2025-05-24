@@ -27,9 +27,6 @@ class LocationDTO {
 
 // DTO for Creating a Session
 export class CreateSessionDto {
-  @IsUUID()
-  creatorId: string;
-
   @ValidateNested()
   @Type(() => LocationDTO)
   location: LocationDTO;
