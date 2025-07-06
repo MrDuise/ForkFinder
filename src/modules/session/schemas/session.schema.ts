@@ -12,16 +12,13 @@ export class GroupSettings {
   @Prop({ type: String, required: true })
   sharingLink: string;
 
-  @Prop({ type: String, required: true })
-  notificationPreferences: string;
-
   @Prop({ type: Number, required: true })
   timeLimit: number;
 }
 
 @Schema({ timestamps: true })
 export class Session {
-  @Prop({type: String, default: () => uuidv4() })
+  @Prop({ type: String, default: () => uuidv4() })
   id: string;
 
   @Prop({ type: String, default: () => uuidv4() }) //UUID
