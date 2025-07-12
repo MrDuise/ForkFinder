@@ -18,7 +18,7 @@ export class SessionService {
   ) {}
 
   async createSession(
-    createrID: string,
+    creatorId: string,
     createSessionDto: CreateSessionDto,
   ): Promise<Session> {
     const { location, settings } = createSessionDto;
@@ -33,7 +33,7 @@ export class SessionService {
     const restaurants = await this.fetchRestaurants(location);
 
     // Step 4: Store restaurant data in Redis
-    await this.redisService.set(redisKey, JSON.stringify(restaurants));
+    await this.redisService.set(redisKey, restaurants);
 
     //Step 5: generate link
     const sharingLink = await this.createLink(sessionId);
@@ -47,8 +47,8 @@ export class SessionService {
     // Step 6: Create and save the session in MongoDB
     const session = new this.sessionModel({
       _id: sessionId, // Store the session ID in MongoDB as well
-      createrID, //links the session to the id of who created it
-      participants: [createrID], // Creator is automatically added
+      creatorId, //links the session to the id of who created it
+      participants: [creatorId], // Creator is automatically added
       votes: [],
       location,
       settings: groupSettings,

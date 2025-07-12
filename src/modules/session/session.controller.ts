@@ -16,11 +16,11 @@ import { AuthGuard } from '../auth/jwt-auth.guard';
 import { Request } from 'express';
 
 @UseGuards(AuthGuard)
-@Controller('sessions')
+@Controller('session')
 export class SessionController {
   constructor(private readonly sessionService: SessionService) {}
 
-  @Post()
+  @Post('create')
   async createSession(@Body() data: CreateSessionDto, @Req() req: Request) {
     const userId = req.user?.userId;
 
