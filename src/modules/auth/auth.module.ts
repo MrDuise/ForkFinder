@@ -8,6 +8,7 @@ import { AuthController } from './controllers/auth.controller';
 import { User } from './entities/user.entity';
 import { UserController } from './controllers/user.controller';
 import { UserPreferences } from './entities/profile.entity';
+import { AuthGuard } from './jwt-auth.guard';
 
 console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
@@ -24,7 +25,13 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET);
     }),
     TypeOrmModule.forFeature([UserPreferences]),
   ],
-  providers: [AuthService, UserService],
+  providers: [AuthService, UserService, AuthGuard],
   controllers: [AuthController, UserController],
+  exports: [
+    AuthService,
+    UserService,
+    AuthGuard,
+    JwtModule, // Export JwtModule so other modules can use it
+  ],
 })
 export class AuthModule {}

@@ -11,5 +11,18 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
+  redis:
+      image: redis:7-alpine
+      container_name: session_redis
+      restart: always
+      ports:
+        - "6379:6379"
+      volumes:
+        - redis_data:/data
+      command: redis-server --appendonly yes --requirepass redispassword
+      environment:
+        - REDIS_PASSWORD=redispassword
+
 volumes:
+  redis_data:
   mongodb_data:

@@ -1,13 +1,10 @@
-import { IsString, IsNumber, IsUUID, ValidateNested } from 'class-validator';
+import { IsNumber, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 // DTO for GroupSettings
 class GroupSettingsDTO {
   @IsNumber()
   maxGroupSize: number;
-
-  @IsString()
-  notificationPreferences: string;
 
   @IsNumber()
   timeLimit: number;
@@ -27,9 +24,6 @@ class LocationDTO {
 
 // DTO for Creating a Session
 export class CreateSessionDto {
-  @IsUUID()
-  creatorId: string;
-
   @ValidateNested()
   @Type(() => LocationDTO)
   location: LocationDTO;

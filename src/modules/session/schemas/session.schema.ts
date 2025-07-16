@@ -12,19 +12,20 @@ export class GroupSettings {
   @Prop({ type: String, required: true })
   sharingLink: string;
 
-  @Prop({ type: String, required: true })
-  notificationPreferences: string;
-
   @Prop({ type: Number, required: true })
   timeLimit: number;
 }
 
 @Schema({ timestamps: true })
 export class Session {
-  @Prop({type: String, default: () => uuidv4() })
-  id: string;
+  @Prop({
+    type: String,
+    default: () => uuidv4(),
+    _id: true, // This tells MongoDB to use this field as the _id
+  })
+  _id: string;
 
-  @Prop({ type: String, default: () => uuidv4() }) //UUID
+  @Prop({ type: String, required: true }) // This should be the actual user ID from JWT
   creatorId: string;
 
   @Prop({ type: [String], default: [] }) //UUID
@@ -55,3 +56,6 @@ export class Session {
 
 export const SessionSchema = SchemaFactory.createForClass(Session);
 export const GroupSettingsSchema = SchemaFactory.createForClass(GroupSettings);
+
+// Disable the automatic _id generation since we're providing our own
+SessionSchema.set('_id', false);
