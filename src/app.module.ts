@@ -10,6 +10,7 @@ import { AppService } from './app.service';
 import { LoggingMiddleware } from './common/middleware/logging.middleware';
 import { databaseConfig } from './config/database.config';
 import { redisConfig } from './config/redis.config';
+import { RestaurantSearchService } from './restaurant-search/restaurant-search.service';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { redisConfig } from './config/redis.config';
     RedisConfigModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RestaurantSearchService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
