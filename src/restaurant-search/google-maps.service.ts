@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Client, PlaceInputType } from '@googlemaps/google-maps-services-js';
+import { Client } from '@googlemaps/google-maps-services-js';
 
 export interface GooglePlaceResult {
   place_id: string;
@@ -59,7 +59,7 @@ export class GoogleMapsService {
   private readonly apiKey: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.apiKey = this.configService.get<string>('GOOGLE_MAPS_API_KEY');
+    this.apiKey = this.configService.get<string>('GOOGLE_MAPS_API_KEY') || '';
     if (!this.apiKey) {
       throw new Error('Google Maps API key is required');
     }
@@ -118,7 +118,10 @@ export class GoogleMapsService {
     }
   }
 
-  async textSearch(query: string, location?: string): Promise<GooglePlaceResult[]> {
+  async textSearch(
+    query: string,
+    location?: string,
+  ): Promise<GooglePlaceResult[]> {
     try {
       const response = await this.client.textSearch({
         params: {

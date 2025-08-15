@@ -102,7 +102,7 @@ export class YelpService {
   }
 
   async searchBusinesses(params: YelpSearchParams): Promise<{
-    businesses: YelpBusiness[];
+    businesses: YelpBusinessDetails[];
     total: number;
   }> {
     try {
@@ -151,7 +151,7 @@ export class YelpService {
     location: { lat: number; lng: number },
     radius: number = 5000,
     limit: number = 20,
-  ): Promise<YelpBusiness[]> {
+  ): Promise<YelpBusinessDetails[]> {
     const params: YelpSearchParams = {
       term,
       latitude: location.lat,

@@ -1,14 +1,14 @@
 import { Controller, Get, Query, BadRequestException } from '@nestjs/common';
 import { RestaurantSearchService } from './restaurant-search.service';
 import { GoogleMapsService } from './google-maps.service';
-import { YelpService } from './yelp.service';
+//import { YelpService } from './yelp.service';
 
 @Controller('restaurants')
 export class RestaurantController {
   constructor(
     private readonly restaurantSearchService: RestaurantSearchService,
     private readonly googleMapsService: GoogleMapsService,
-    private readonly yelpService: YelpService,
+    //private readonly yelpService: YelpService,
   ) {}
 
   @Get('search')
@@ -53,30 +53,39 @@ export class RestaurantController {
     };
     const searchRadius = radius ? parseInt(radius) : 5000;
 
-    return this.googleMapsService.searchRestaurants(query, location, searchRadius);
+    return this.googleMapsService.searchRestaurants(
+      query,
+      location,
+      searchRadius,
+    );
   }
 
-  @Get('yelp')
-  async searchYelpOnly(
-    @Query('query') query: string,
-    @Query('lat') lat: string,
-    @Query('lng') lng: string,
-    @Query('radius') radius?: string,
-    @Query('limit') limit?: string,
-  ) {
-    if (!query || !lat || !lng) {
-      throw new BadRequestException('Query, lat, and lng are required');
-    }
+  // @Get('yelp')
+  // async searchYelpOnly(
+  //   @Query('query') query: string,
+  //   @Query('lat') lat: string,
+  //   @Query('lng') lng: string,
+  //   @Query('radius') radius?: string,
+  //   @Query('limit') limit?: string,
+  // ) {
+  //   if (!query || !lat || !lng) {
+  //     throw new BadRequestException('Query, lat, and lng are required');
+  //   }
 
-    const location = {
-      lat: parseFloat(lat),
-      lng: parseFloat(lng),
-    };
-    const searchRadius = radius ? parseInt(radius) : 5000;
-    const searchLimit = limit ? parseInt(limit) : 20;
+  //   const location = {
+  //     lat: parseFloat(lat),
+  //     lng: parseFloat(lng),
+  //   };
+  //   const searchRadius = radius ? parseInt(radius) : 5000;
+  //   const searchLimit = limit ? parseInt(limit) : 20;
 
-    return this.yelpService.searchByLocation(query, location, searchRadius, searchLimit);
-  }
+  //   return this.yelpService.searchByLocation(
+  //     query,
+  //     location,
+  //     searchRadius,
+  //     searchLimit,
+  //   );
+  // }
 
   @Get('google/details/:placeId')
   async getGooglePlaceDetails(@Query('placeId') placeId: string) {
@@ -86,19 +95,19 @@ export class RestaurantController {
     return this.googleMapsService.getPlaceDetails(placeId);
   }
 
-  @Get('yelp/details/:businessId')
-  async getYelpBusinessDetails(@Query('businessId') businessId: string) {
-    if (!businessId) {
-      throw new BadRequestException('Business ID is required');
-    }
-    return this.yelpService.getBusinessDetails(businessId);
-  }
+  // @Get('yelp/details/:businessId')
+  // async getYelpBusinessDetails(@Query('businessId') businessId: string) {
+  //   if (!businessId) {
+  //     throw new BadRequestException('Business ID is required');
+  //   }
+  //   return this.yelpService.getBusinessDetails(businessId);
+  // }
 
-  @Get('yelp/reviews/:businessId')
-  async getYelpReviews(@Query('businessId') businessId: string) {
-    if (!businessId) {
-      throw new BadRequestException('Business ID is required');
-    }
-    return this.yelpService.getBusinessReviews(businessId);
-  }
+  // @Get('yelp/reviews/:businessId')
+  // async getYelpReviews(@Query('businessId') businessId: string) {
+  //   if (!businessId) {
+  //     throw new BadRequestException('Business ID is required');
+  //   }
+  //   return this.yelpService.getBusinessReviews(businessId);
+  // }
 }

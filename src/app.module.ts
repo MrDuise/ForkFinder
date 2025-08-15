@@ -11,6 +11,7 @@ import { LoggingMiddleware } from './common/middleware/logging.middleware';
 import { databaseConfig } from './config/database.config';
 import { redisConfig } from './config/redis.config';
 import { RestaurantSearchService } from './restaurant-search/restaurant-search.service';
+import { RestaurantSearchModule } from './restaurant-search/restaurant-search.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { RestaurantSearchService } from './restaurant-search/restaurant-search.s
     AuthModule,
     SessionModule,
     RedisConfigModule,
+    RestaurantSearchModule,
   ],
   controllers: [AppController],
   providers: [AppService, RestaurantSearchService],

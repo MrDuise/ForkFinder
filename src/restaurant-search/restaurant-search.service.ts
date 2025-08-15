@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GoogleMapsService, GooglePlaceResult } from './google-maps.service';
-import { YelpService, YelpBusiness } from './yelp.service';
+//import { YelpService, YelpBusiness, YelpBusinessDetails } from './yelp.service';
 
 export interface CombinedRestaurantResult {
   id: string;
@@ -20,7 +20,7 @@ export interface CombinedRestaurantResult {
   isOpen?: boolean;
   source: 'google' | 'yelp' | 'both';
   googleData?: GooglePlaceResult;
-  yelpData?: YelpBusiness;
+  //yelpData?: YelpBusiness;
 }
 
 export interface SearchParams {
@@ -39,7 +39,7 @@ export class RestaurantSearchService {
 
   constructor(
     private readonly googleMapsService: GoogleMapsService,
-    private readonly yelpService: YelpService,
+    //private readonly yelpService: YelpService,
   ) {}
 
   async searchRestaurants(
@@ -49,26 +49,25 @@ export class RestaurantSearchService {
 
     try {
       // Run both API calls in parallel
-      const [googleResults, yelpResults] = await Promise.allSettled([
+      const [googleResults] = await Promise.allSettled([
         this.googleMapsService.searchRestaurants(query, location, radius),
-        this.yelpService.searchByLocation(query, location, radius, limit),
+        //this.yelpService.searchByLocation(query, location, radius, limit),
       ]);
 
       const googleData =
         googleResults.status === 'fulfilled' ? googleResults.value : [];
-      const yelpData =
-        yelpResults.status === 'fulfilled' ? yelpResults.value : [];
+      //const yelpData = yelpResults.status === 'fulfilled' ? yelpResults.value : [];
 
       // Log any failures
       if (googleResults.status === 'rejected') {
         this.logger.warn('Google Maps search failed:', googleResults.reason);
       }
-      if (yelpResults.status === 'rejected') {
-        this.logger.warn('Yelp search failed:', yelpResults.reason);
-      }
+      // if (yelpResults.status === 'rejected') {
+      //   this.logger.warn('Yelp search failed:', yelpResults.reason);
+      // }
 
       // Combine and deduplicate results
-      const combinedResults = this.combineResults(googleData, yelpData);
+      const combinedResults = this.combineResults(googleData);
 
       // Sort by rating and limit results
       return combinedResults
@@ -82,7 +81,7 @@ export class RestaurantSearchService {
 
   private combineResults(
     googleResults: GooglePlaceResult[],
-    yelpResults: YelpBusiness[],
+    // yelpResults: YelpBusinessDetails[],
   ): CombinedRestaurantResult[] {
     const combinedMap = new Map<string, CombinedRestaurantResult>();
 
@@ -93,27 +92,27 @@ export class RestaurantSearchService {
     });
 
     // Process Yelp results
-    yelpResults.forEach((business) => {
-      const normalized = this.normalizeYelpResult(business);
-      const existing = this.findMatchingRestaurant(combinedMap, normalized);
+    // yelpResults.forEach((business) => {
+    //   const normalized = this.normalizeYelpResult(business);
+    //   const existing = this.findMatchingRestaurant(combinedMap, normalized);
 
-      if (existing) {
-        // Merge with existing Google result
-        existing.source = 'both';
-        existing.yelpData = business;
-        // Use Yelp data if it has more reviews or higher rating
-        if (business.review_count > existing.reviewCount) {
-          existing.reviewCount = business.review_count;
-          existing.rating = business.rating;
-        }
-        if (business.photos && business.photos.length > 0) {
-          existing.photos = [...existing.photos, ...business.photos];
-        }
-      } else {
-        // Add as new result
-        combinedMap.set(normalized.id, normalized);
-      }
-    });
+    //   if (existing) {
+    //     // Merge with existing Google result
+    //     existing.source = 'both';
+    //     existing.yelpData = business;
+    //     // Use Yelp data if it has more reviews or higher rating
+    //     if (business.review_count > existing.reviewCount) {
+    //       existing.reviewCount = business.review_count;
+    //       existing.rating = business.rating;
+    //     }
+    //     if (business.photos && business.photos.length > 0) {
+    //       existing.photos = [...existing.photos, ...business.photos];
+    //     }
+    //   } else {
+    //     // Add as new result
+    //     combinedMap.set(normalized.id, normalized);
+    //   }
+    // });
 
     return Array.from(combinedMap.values());
   }
@@ -144,29 +143,29 @@ export class RestaurantSearchService {
     };
   }
 
-  private normalizeYelpResult(
-    business: YelpBusiness,
-  ): CombinedRestaurantResult {
-    return {
-      id: business.id,
-      name: business.name,
-      address: business.location.display_address.join(', '),
-      coordinates: {
-        lat: business.coordinates.latitude,
-        lng: business.coordinates.longitude,
-      },
-      rating: business.rating,
-      reviewCount: business.review_count,
-      priceLevel: business.price ? business.price.length : undefined,
-      categories: business.categories.map((cat) => cat.title),
-      photos: business.image_url ? [business.image_url] : [],
-      phone: business.display_phone,
-      website: business.url,
-      isOpen: !business.is_closed,
-      source: 'yelp',
-      yelpData: business,
-    };
-  }
+  // private normalizeYelpResult(
+  //   business: YelpBusiness,
+  // ): CombinedRestaurantResult {
+  //   return {
+  //     id: business.id,
+  //     name: business.name,
+  //     address: business.location.display_address.join(', '),
+  //     coordinates: {
+  //       lat: business.coordinates.latitude,
+  //       lng: business.coordinates.longitude,
+  //     },
+  //     rating: business.rating,
+  //     reviewCount: business.review_count,
+  //     priceLevel: business.price ? business.price.length : undefined,
+  //     categories: business.categories.map((cat) => cat.title),
+  //     photos: business.image_url ? [business.image_url] : [],
+  //     phone: business.display_phone,
+  //     website: business.url,
+  //     isOpen: !business.is_closed,
+  //     source: 'yelp',
+  //     yelpData: business,
+  //   };
+  // }
 
   private findMatchingRestaurant(
     existingResults: Map<string, CombinedRestaurantResult>,
