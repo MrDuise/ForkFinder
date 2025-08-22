@@ -11,6 +11,7 @@ export class RestaurantController {
     //private readonly yelpService: YelpService,
   ) {}
 
+/*
   @Get('search')
   async searchRestaurants(
     @Query('query') query: string,
@@ -35,6 +36,7 @@ export class RestaurantController {
 
     return this.restaurantSearchService.searchRestaurants(searchParams);
   }
+*/
 
   @Get('google')
   async searchGoogleOnly(
