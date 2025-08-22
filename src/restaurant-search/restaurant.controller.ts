@@ -37,7 +37,7 @@ export class RestaurantController {
     return this.restaurantSearchService.searchRestaurants(searchParams);
   }
 */
-
+// this is the only route I need. this controller is for testing, will use service internally without route
   @Get('google')
   async searchGoogleOnly(
     @Query('query') query: string,
