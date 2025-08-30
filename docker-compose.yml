@@ -1,6 +1,18 @@
 version: '3.8'
 services:
-  mongodb:
+  usersDatabase:
+    image: postgres:latest
+    container_name: users_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: ForkFinder
+    volumes:
+      - users_db_data:/var/lib/postgresql/data
+  sessionDatabase:
     image: mongo:latest
     container_name: session_mongodb
     restart: always
@@ -13,7 +25,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
   redis:
       image: redis:7-alpine
-      container_name: session_redis
+      container_name: restraunt_redis
       restart: always
       ports:
         - "6379:6379"
@@ -26,3 +38,4 @@ services:
 volumes:
   redis_data:
   mongodb_data:
+  users_db_data:
