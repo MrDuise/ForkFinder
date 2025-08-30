@@ -11,6 +11,7 @@ export class RestaurantController {
     //private readonly yelpService: YelpService,
   ) {}
 
+/*
   @Get('search')
   async searchRestaurants(
     @Query('query') query: string,
@@ -35,7 +36,8 @@ export class RestaurantController {
 
     return this.restaurantSearchService.searchRestaurants(searchParams);
   }
-
+*/
+// this is the only route I need. this controller is for testing, will use service internally without route
   @Get('google')
   async searchGoogleOnly(
     @Query('query') query: string,
