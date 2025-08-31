@@ -9,6 +9,7 @@ import { User } from './entities/user.entity';
 import { UserController } from './controllers/user.controller';
 import { UserPreferences } from './entities/profile.entity';
 import { AuthGuard } from './jwt-auth.guard';
+import { GoogleMapsService } from 'src/restaurant-search/google-maps.service';
 
 console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
@@ -25,7 +26,7 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET);
     }),
     TypeOrmModule.forFeature([UserPreferences]),
   ],
-  providers: [AuthService, UserService, AuthGuard],
+  providers: [AuthService, UserService, AuthGuard, GoogleMapsService],
   controllers: [AuthController, UserController],
   exports: [
     AuthService,

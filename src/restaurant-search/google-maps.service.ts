@@ -141,4 +141,22 @@ export class GoogleMapsService {
   getPhotoUrl(photoReference: string, maxWidth: number = 400): string {
     return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoReference}&key=${this.apiKey}`;
   }
+
+  async geocodeAddress(address: string) {
+    const geo = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${this.apiKey}`,
+    );
+    const gdata = await geo.json();
+    return gdata.results[0].geometry.location;
+    // const geocoder = NodeGeocoder({
+    //   provider: 'openstreetmap', // You can also use 'google', 'mapquest', etc.
+    // });
+    // try {
+    //   const res = await geocoder.geocode(address);
+    //   console.log(res);
+    //   return res[0]; // Contains latitude, longitude, etc.
+    // } catch (error) {
+    //   console.error('Geocoding error:', error);
+    // }
+  }
 }
