@@ -66,6 +66,11 @@ export class UserService {
     if (!updateProfile.address) {
       throw new Error('Address is required to update profile.');
     }
+    // if address has changed, geocode it
+    if (existingProfile?.defaultLocation?.address !== updateProfile.address) {
+      console.log('Address has changed, geocoding new address...');
+    }
+    //fix this, do not want to call every time if address is the same
     const { lat, lng } = await this.googleMapsService.geocodeAddress(
       updateProfile.address!,
     );
