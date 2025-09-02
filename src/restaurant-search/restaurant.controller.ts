@@ -3,6 +3,12 @@ import { RestaurantSearchService } from './restaurant-search.service';
 import { GoogleMapsService } from './google-maps.service';
 //import { YelpService } from './yelp.service';
 
+
+/*
+* The purpose of this controller is for testing the google services class
+* All services will be called internally, but this controller allows for testing, with future spliting of services
+*/
+
 @Controller('restaurants')
 export class RestaurantController {
   constructor(
@@ -60,6 +66,20 @@ export class RestaurantController {
       location,
       searchRadius,
     );
+  }
+
+//Testing controller to verify that geocodeAddress works correctly
+  @Get('geocode')
+  async getGeocode(@Query('address') address: string) {
+    if (!address) {
+      return { error: 'Address query parameter is required' };
+    }
+    try {
+      const location = await this.googleMapsService.geocodeAddress(address);
+      return { address, location };
+    } catch (error) {
+      return { error: 'Failed to geocode address', details: error.message };
+    }
   }
 
   // @Get('yelp')
