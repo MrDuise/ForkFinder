@@ -1,9 +1,7 @@
 import { registerAs } from '@nestjs/config';
 
 export const mongoConfig = registerAs('mongo', () => ({
-  uri:
-    process.env.MONGODB_URI ||
-    'mongodb://admin:password@localhost:27017/sessionDB?authSource=admin',
+  uri: process.env.MONGODB_URI!,
   useNewUrlParser: true,
   useUnifiedTopology: true,
   maxPoolSize: 10,
@@ -11,5 +9,4 @@ export const mongoConfig = registerAs('mongo', () => ({
   socketTimeoutMS: 45000,
   connectTimeoutMS: 10000,
   bufferCommands: false,
-  bufferMaxEntries: 0,
 }));

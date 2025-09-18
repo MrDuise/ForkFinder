@@ -10,7 +10,7 @@ import { UserProfile } from '../dto/user-profile';
 //import { validateOrReject } from 'class-validator';
 import { UserPreferences } from '../entities/profile.entity';
 import { ProfileRequest } from '../dto/updateProfileRequest';
-import NodeGeocoder from 'node-geocoder';
+import { GoogleMapsService } from '../../../restaurant-search/google-maps.service';
 
 @Injectable()
 export class UserService {
@@ -18,6 +18,7 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(UserPreferences)
     private profileRepository: Repository<UserPreferences>,
+    private readonly googleMapsService: GoogleMapsService,
   ) {}
 
   async findByEmail(email: string): Promise<User | null> {
@@ -61,18 +62,27 @@ export class UserService {
     updateProfile: ProfileRequest,
   ): Promise<UserProfile> {
     const existingProfile = await this.findProfileById(userID);
-    const location: NodeGeocoder.Entry | undefined = await this.geocodeAddress(
+    //get lat/lng from address
+    if (!updateProfile.address) {
+      throw new Error('Address is required to update profile.');
+    }
+    // if address has changed, geocode it
+    if (existingProfile?.defaultLocation?.address !== updateProfile.address) {
+      console.log('Address has changed, geocoding new address...');
+    }
+    //fix this, do not want to call every time if address is the same
+    const { lat, lng } = await this.googleMapsService.geocodeAddress(
       updateProfile.address!,
     );
-    if (!location) {
+    if (!lat || !lng) {
       throw new Error('Could not geocode the given address.');
     }
     const userProfile: UserProfile = {
       userId: userID,
       defaultLocation: {
         address: updateProfile.address!,
-        latitude: location.latitude!,
-        longitude: location.longitude!,
+        latitude: lat!,
+        longitude: lng!,
       },
       defaultRadius: updateProfile?.defaultRadius,
       dietaryPreferences: updateProfile?.dietaryPreferences,
@@ -88,18 +98,5 @@ export class UserService {
     //await validateOrReject(profileEntity); // throws if invalid
 
     return await this.profileRepository.save(profileEntity);
-  }
-
-  async geocodeAddress(address: string) {
-    const geocoder = NodeGeocoder({
-      provider: 'openstreetmap', // You can also use 'google', 'mapquest', etc.
-    });
-    try {
-      const res = await geocoder.geocode(address);
-      console.log(res);
-      return res[0]; // Contains latitude, longitude, etc.
-    } catch (error) {
-      console.error('Geocoding error:', error);
-    }
   }
 }

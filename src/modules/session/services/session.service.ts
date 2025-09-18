@@ -9,12 +9,17 @@ import {
 import { CreateSessionDto } from '../dto/create-session-dto';
 import { v4 as uuidv4 } from 'uuid';
 import { RedisService } from '../../redis/redis.service';
+import {
+  GoogleMapsService,
+  GooglePlaceResult,
+} from '../../../restaurant-search/google-maps.service';
 
 @Injectable()
 export class SessionService {
   constructor(
     @InjectModel(Session.name) private sessionModel: Model<SessionDocument>,
     private readonly redisService: RedisService,
+    private readonly googleMapsService: GoogleMapsService,
   ) {}
 
   async createSession(
@@ -59,17 +64,22 @@ export class SessionService {
     return session.save();
   }
 
+  //needs to be updated, query param for searching for specific cuisine types, or price levels, etc
+  //query param matches individual user preferences too, so if they want vegan places only, or gluten free, etc
   private async fetchRestaurants(_location: {
     lat: number;
     lng: number;
     radius: number;
   }) {
+    const restraunts: GooglePlaceResult[] =
+      await this.googleMapsService.searchRestaurants(
+        '',
+        _location,
+        _location.radius,
+      );
     // Call external API to get restaurant data (replace with actual implementation)
     //calls google api, yelp api, combines into custom object, with vote data attached to each restraunt. vote data is updated by the websocket connection, which is tied to the session id
-    return [
-      { id: 'restaurant1', name: 'Pizza Place', votes: 2 },
-      { id: 'restaurant2', name: 'Sushi Spot', votes: 0 },
-    ];
+    return restraunts;
   }
 
   async getSessionById(id: string): Promise<Session | null> {

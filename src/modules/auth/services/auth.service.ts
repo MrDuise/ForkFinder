@@ -19,6 +19,10 @@ export class AuthService {
     return user;
   }
 
+  //TODO: Current system requires a user account,
+  //Implement guest access with temporary user profiles later
+  //Maybe just create a temporary user in the DB that gets deleted after session ends
+  //Or use JWT without user record, but that limits ability to save preferences
   async login(
     email: string,
     password: string,
@@ -30,5 +34,9 @@ export class AuthService {
     };
   }
 
+  // Placeholder for logout functionality
   //async logout(){}
+
+  //need Google login too
+  
 }
