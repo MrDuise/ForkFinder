@@ -12,23 +12,23 @@ import { databaseConfig } from './config/database.config';
 import { redisConfig } from './config/redis.config';
 import { RestaurantSearchService } from './restaurant-search/restaurant-search.service';
 import { RestaurantSearchModule } from './restaurant-search/restaurant-search.module';
+import { validateConfig } from './config/env.validation';
+
+import { jwtConfig, mongoConfig } from './config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, redisConfig],
+      validate: validateConfig,
+      load: [databaseConfig, redisConfig, mongoConfig, jwtConfig],
       envFilePath: ['.env.local', '.env'],
     }),
     TypeOrmModule.forRootAsync({
       useFactory: databaseConfig,
     }),
     MongooseModule.forRootAsync({
-      useFactory: () => ({
-        uri:
-          process.env.MONGODB_URI ||
-          'mongodb://admin:password@localhost:27017/sessionDB?authSource=admin',
-      }),
+      useFactory: mongoConfig,
     }),
     AuthModule,
     SessionModule,
