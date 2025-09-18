@@ -6,31 +6,62 @@ export class LoggingMiddleware implements NestMiddleware {
   private readonly logger = new Logger('HTTP');
 
   use(req: Request, res: Response, next: NextFunction): void {
-    const { method, originalUrl, body } = req;
-    const userAgent = req.get('user-agent') || '';
+    const { method, originalUrl } = req;
     const startTime = Date.now();
 
-    // Remove sensitive data like password
-    const sanitizedBody = { ...body };
-    if (sanitizedBody.password) {
-      sanitizedBody.password = '[REDACTED]';
-    }
+    // Only log bodies for specific routes and non-GET requests
+    const shouldLogBody = this.shouldLogRequestBody(method, originalUrl);
 
-    this.logger.log(
-      `[${method}] ${originalUrl} - User Agent: ${userAgent} - Body: ${JSON.stringify(sanitizedBody)}`,
-    );
+    if (shouldLogBody) {
+      const sanitizedBody = this.sanitizeBody(req.body);
+      this.logger.debug(`📤 [${method}] ${originalUrl}`, {
+        body: sanitizedBody,
+      });
+    } else {
+      this.logger.log(`📤 [${method}] ${originalUrl}`);
+    }
 
     res.on('finish', () => {
       const { statusCode } = res;
-      const contentLength = res.get('content-length');
       const duration = Date.now() - startTime;
 
-      // Log the response details
-      this.logger.log(
-        `[${method}] ${originalUrl} ${statusCode} - ${contentLength}b - ${duration}ms - User Agent: ${userAgent}`,
-      );
+      if (statusCode >= 400) {
+        this.logger.error(
+          `❌ [${method}] ${originalUrl} ${statusCode} - ${duration}ms`,
+        );
+      } else if (duration > 1000) {
+        this.logger.warn(
+          `🐌 [${method}] ${originalUrl} ${statusCode} - ${duration}ms (SLOW)`,
+        );
+      } else {
+        this.logger.log(
+          `✅ [${method}] ${originalUrl} ${statusCode} - ${duration}ms`,
+        );
+      }
     });
 
     next();
+  }
+
+  private shouldLogRequestBody(method: string, url: string): boolean {
+    // Only log bodies for debugging specific routes
+    if (method === 'GET') return false;
+    if (url.includes('/auth/login')) return false; // Never log login attempts
+    if (process.env.NODE_ENV === 'production') return false;
+    return true;
+  }
+
+  private sanitizeBody(body: any): any {
+    if (!body) return body;
+    const sensitive = ['password', 'token', 'secret', 'key'];
+    const sanitized = { ...body };
+
+    sensitive.forEach((field) => {
+      if (sanitized[field]) {
+        sanitized[field] = '[REDACTED]';
+      }
+    });
+
+    return sanitized;
   }
 }

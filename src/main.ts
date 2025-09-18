@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import { ValidationPipe, Logger, LogLevel } from '@nestjs/common';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { GlobalExceptionFilter } from './common/middleware/http-exception.middleware';
@@ -10,9 +10,26 @@ dotenv.config();
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
+  type Env = 'production' | 'staging' | 'development';
+
+  const logLevels: Record<Env, LogLevel[]> = {
+    production: ['error', 'warn'],
+    staging: ['error', 'warn', 'log'],
+    development: ['error', 'warn', 'log', 'debug', 'verbose'],
+  };
+
+  function getEnv(defaultEnv: Env = 'development'): Env {
+    const raw = process.env.NODE_ENV;
+    if (raw === 'production' || raw === 'staging' || raw === 'development')
+      return raw;
+    return defaultEnv;
+  }
+
+  const env = getEnv();
+
   try {
     const app = await NestFactory.create(AppModule, {
-      logger: ['log', 'error', 'warn', 'debug', 'verbose'], // Enables all levels
+      logger: logLevels[env],
     });
 
     app.useGlobalFilters(new GlobalExceptionFilter());

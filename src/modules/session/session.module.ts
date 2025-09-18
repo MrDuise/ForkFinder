@@ -5,15 +5,16 @@ import { SessionService } from './services/session.service';
 import { SessionController } from './session.controller';
 import { RedisConfigModule } from '../redis/redis.module';
 import { AuthModule } from '../auth/auth.module';
-import { GoogleMapsService } from 'src/restaurant-search/google-maps.service';
+import { RestaurantSearchModule } from 'src/restaurant-search/restaurant-search.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Session.name, schema: SessionSchema }]),
     AuthModule,
     RedisConfigModule,
+    RestaurantSearchModule,
   ],
-  providers: [SessionService, GoogleMapsService],
+  providers: [SessionService],
   controllers: [SessionController],
   exports: [SessionService],
 })
