@@ -4,9 +4,15 @@ export const mongoConfig = registerAs('mongo', () => ({
   uri: process.env.MONGODB_URI!,
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  maxPoolSize: 10,
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-  connectTimeoutMS: 10000,
+  retryAttempts: 5,
+  retryDelay: 3000, // 3 seconds
+  // MongoDB connection resilience options
+  maxPoolSize: 20,
+  serverSelectionTimeoutMS: 10000, // 10 seconds
+  socketTimeoutMS: 45000, // 45 seconds
+  connectTimeoutMS: 10000, // 10 seconds
+  heartbeatFrequencyMS: 10000, // 10 seconds
+  maxIdleTimeMS: 30000, // 30 seconds
+  //bufferMaxEntries: 0, // Don't buffer operations
   bufferCommands: false,
 }));

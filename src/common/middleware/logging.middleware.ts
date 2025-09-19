@@ -45,7 +45,7 @@ export class LoggingMiddleware implements NestMiddleware {
 
   private shouldLogRequestBody(method: string, url: string): boolean {
     // Only log bodies for debugging specific routes
-    if (method === 'GET') return false;
+    //if (method === 'GET') return false;
     if (url.includes('/auth/login')) return false; // Never log login attempts
     if (process.env.NODE_ENV === 'production') return false;
     return true;

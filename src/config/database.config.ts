@@ -21,5 +21,16 @@ export const databaseConfig = registerAs(
         : false,
     migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
     autoLoadEntities: true,
+    // retryAttempts: 5,
+    // retryDelay: 3000, // 3 seconds
+
+    // Connection pool and timeout settings for better resilience
+    extra: {
+      connectionTimeoutMillis: 10000, // 10 seconds
+      idleTimeoutMillis: 30000, // 30 seconds
+      max: 20, // max connections in pool
+      statement_timeout: 30000, // 30 seconds for queries
+      query_timeout: 30000,
+    },
   }),
 );

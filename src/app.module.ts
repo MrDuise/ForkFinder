@@ -14,6 +14,7 @@ import { RestaurantSearchModule } from './restaurant-search/restaurant-search.mo
 import { validateConfig } from './config/env.validation';
 
 import { jwtConfig, mongoConfig } from './config';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { jwtConfig, mongoConfig } from './config';
     SessionModule,
     RedisConfigModule,
     RestaurantSearchModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

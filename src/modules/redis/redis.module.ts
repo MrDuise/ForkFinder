@@ -22,6 +22,14 @@ import { RedisService } from './redis.service'; // Adjust path as needed
         return {
           type: 'single',
           url,
+          // Redis retry configuration
+          retryDelayOnFailover: 100,
+          maxRetriesPerRequest: 3,
+          lazyConnect: true,
+
+          // Connection timeout and retry
+          connectTimeout: 5000,
+          commandTimeout: 5000,
           options: {
             db: redis.db,
             keyPrefix: redis.keyPrefix,
