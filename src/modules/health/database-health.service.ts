@@ -12,7 +12,7 @@ import { InjectRedis } from '@nestjs-modules/ioredis';
 
 @Injectable()
 export class DatabaseHealthService {
-  private readonly logger = new Logger('HTTP');
+  private readonly logger = new Logger('HTTP')
 
   constructor(
     private readonly healthIndicatorService: HealthIndicatorService,

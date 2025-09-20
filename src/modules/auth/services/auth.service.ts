@@ -1,12 +1,10 @@
 // eslint-disable-next-line prettier/prettier
-import { Injectable, UnauthorizedException, UseInterceptors } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { UserService } from './user.service';
-import { DatabaseRetryInterceptor } from '../../../interceptors/database-retry.interceptor';
 
 @Injectable()
-@UseInterceptors(DatabaseRetryInterceptor)
 export class AuthService {
   constructor(
     private userService: UserService,

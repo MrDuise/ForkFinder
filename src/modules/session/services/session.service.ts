@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UseInterceptors } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
@@ -13,10 +13,8 @@ import {
   GoogleMapsService,
   GooglePlaceResult,
 } from '../../../restaurant-search/google-maps.service';
-import { DatabaseRetryInterceptor } from '../../../interceptors/database-retry.interceptor';
 
 @Injectable()
-@UseInterceptors(DatabaseRetryInterceptor)
 export class SessionService {
   constructor(
     @InjectModel(Session.name) private sessionModel: Model<SessionDocument>,
