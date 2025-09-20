@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
@@ -14,6 +14,7 @@ import { GoogleMapsService } from '../../../restaurant-search/google-maps.servic
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger('HTTP');
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(UserPreferences)
@@ -68,7 +69,7 @@ export class UserService {
     }
     // if address has changed, geocode it
     if (existingProfile?.defaultLocation?.address !== updateProfile.address) {
-      console.log('Address has changed, geocoding new address...');
+      this.logger.log('Address has changed, geocoding new address...');
     }
     //fix this, do not want to call every time if address is the same
     const { lat, lng } = await this.googleMapsService.geocodeAddress(

@@ -10,7 +10,6 @@ import { AppService } from './app.service';
 import { LoggingMiddleware } from './common/middleware/logging.middleware';
 import { databaseConfig } from './config/database.config';
 import { redisConfig } from './config/redis.config';
-import { RestaurantSearchService } from './restaurant-search/restaurant-search.service';
 import { RestaurantSearchModule } from './restaurant-search/restaurant-search.module';
 import { validateConfig } from './config/env.validation';
 
@@ -36,7 +35,7 @@ import { jwtConfig, mongoConfig } from './config';
     RestaurantSearchModule,
   ],
   controllers: [AppController],
-  providers: [AppService, RestaurantSearchService],
+  providers: [AppService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

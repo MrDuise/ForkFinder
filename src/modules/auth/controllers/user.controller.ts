@@ -5,6 +5,7 @@ import {
   HttpCode,
   Patch,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../jwt-auth.guard';
@@ -15,8 +16,10 @@ import { ProfileRequest } from '../dto/updateProfileRequest';
 @UseGuards(AuthGuard)
 @Controller('user')
 export class UserController {
+  private readonly logger = new Logger('HTTP');
+
   constructor(private readonly userService: UserService) {
-    console.log('UserController loaded');
+    this.logger.debug('UserController initialized');
   }
 
   @Patch('profileInfo')

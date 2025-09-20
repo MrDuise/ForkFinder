@@ -148,15 +148,5 @@ export class GoogleMapsService {
     );
     const gdata = await geo.json();
     return gdata.results[0].geometry.location;
-    // const geocoder = NodeGeocoder({
-    //   provider: 'openstreetmap', // You can also use 'google', 'mapquest', etc.
-    // });
-    // try {
-    //   const res = await geocoder.geocode(address);
-    //   console.log(res);
-    //   return res[0]; // Contains latitude, longitude, etc.
-    // } catch (error) {
-    //   console.error('Geocoding error:', error);
-    // }
   }
 }

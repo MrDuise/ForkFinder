@@ -7,7 +7,7 @@ import { RestaurantController } from './restaurant.controller';
 
 @Module({
   imports: [ConfigModule],
-  providers: [GoogleMapsService, RestaurantSearchService],
+  providers: [RestaurantSearchService, GoogleMapsService],
   controllers: [RestaurantController],
   exports: [GoogleMapsService, RestaurantSearchService],
 })

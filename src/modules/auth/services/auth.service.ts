@@ -38,5 +38,4 @@ export class AuthService {
   //async logout(){}
 
   //need Google login too
-  
 }
